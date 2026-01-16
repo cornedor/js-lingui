@@ -151,4 +151,30 @@ describe("mergeCatalog", () => {
       }),
     })
   })
+
+  it("should preserve extra.flags from previous catalog", () => {
+    const prevCatalog: CatalogType = {
+      "msg.hello": makePrevMessage({
+        translation: "Hello",
+        extra: {
+          flags: ["myTag", "fuzzy"],
+        },
+      }),
+    }
+
+    const nextCatalog: ExtractedCatalogType = {
+      "msg.hello": makeNextMessage({
+        message: "Hello",
+      }),
+    }
+
+    const result = mergeCatalog(
+      prevCatalog,
+      nextCatalog,
+      false,
+      defaultMergeOptions
+    )
+
+    expect(result["msg.hello"].extra?.flags).toEqual(["myTag", "fuzzy"])
+  })
 })
